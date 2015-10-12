@@ -23,6 +23,7 @@ setindex!(d::DataSet, val, col::Column, i) = d[col][i] = val
 getindex(d::DataSet, cols::Tuple) =
   collect(zip(d.data[cols]...))
 
+# TODO: return a view
 getindex{I, T<:Integer}(d::DataSet{I}, rows::AbstractVector{T}) =
   DataSet(names(d), TypedDict{I}(Dict([k => typeof(v)(v[rows]) for (k, v) in d.data])))
 
