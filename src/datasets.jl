@@ -26,14 +26,6 @@ getindex(d::DataSet, cols::Tuple) =
 getindex{I, T<:Integer}(d::DataSet{I}, rows::AbstractVector{T}) =
   DataSet(names(d), TypedDict{I}(Dict([k => typeof(v)(v[rows]) for (k, v) in d.data])))
 
-# function getindex()
-
 Base.names(d::DataSet) = copy(d.cols)
 columns(d::DataSet) = map(c -> d[c], d.cols)
 Base.length(d::DataSet) = length(columns(d)[1])
-
-# DataSet conversions
-
-column(xs) = collect(xs)
-
-DataSet(d::DataFrame) = DataSet([name => column(d[name]) for name in names(d)]...)
