@@ -9,6 +9,7 @@ include("nulls.jl")
 include("typeddicts.jl")
 include("datasets.jl")
 include("views.jl")
+include("pooled.jl")
 include("compat.jl")
 
 end # module

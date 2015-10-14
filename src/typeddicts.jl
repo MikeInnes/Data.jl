@@ -93,7 +93,7 @@ dissoc(d::TypedDict, f) = dissoc!(copy(d), f)
 macro forward(ex, fs)
   @capture(ex, T_.field_) || error("Syntax: @forward T.f f, g, h")
   T = esc(T)
-  fs = map(esc, fs.args)
+  fs = isexpr(fs, :tuple) ? map(esc, fs.args) : [esc(fs)]
   :($([:($f(x::$T, args...) = $f(x.$field, args...)) for f in fs]...);nothing)
 end
 
