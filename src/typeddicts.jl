@@ -1,5 +1,7 @@
 import Base: getindex
 
+export @f_str, TypedDict
+
 # Fields
 
 type Field{K} end
