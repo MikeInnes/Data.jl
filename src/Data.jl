@@ -4,6 +4,7 @@ using MacroTools
 
 Base.call{T<:Number}(x::T, y) = x*y
 
+include("utils.jl")
 include("vartypes.jl")
 include("nulls.jl")
 include("typeddicts.jl")
