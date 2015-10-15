@@ -12,7 +12,7 @@ view(data::Table, i) = DataView(data, i)
 
 view(d::DataView, i) = DataView(d.data, d.index[i])
 
-getindex(d::DataView, f::Column) = slice(d.data[f], d.index)
+getindex(d::DataView, f::Column) = sub(d.data[f], d.index)
 getindex(d::DataView, f::Column, i) = d.data[f, d.index[i]]
 getindex(d::DataView, i) = d.data[d.index[i]]
 
