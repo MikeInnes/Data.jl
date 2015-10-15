@@ -1,4 +1,4 @@
-import Base: getindex, convert, sub, names
+import Base: getindex, convert, sub, names, unique
 
 export PooledVector
 
@@ -27,8 +27,16 @@ convert{T}(::Type{PooledVector{T}}, xs::AbstractVector) =
   PooledVector(convert(AbstractVector{T}, xs))
 
 getindex(xs::PooledVector, i::Integer) = xs.values[xs.data[i]]
-getindex(xs::PooledVector, i::Indexes) = PooledVector(xs.values[xs.data[i]])
+getindex(xs::PooledVector, i::Indexes) = PooledVector(xs.values, xs.data[i])
 
 names(xs::PooledVector) = xs.values
+
+function unique(xs::PooledVector)
+  seen = falses(length(xs.values))
+  for i in xs.data
+    seen[i] = true
+  end
+  return xs.values[seen]
+end
 
 @forward PooledVector.data Base.size
