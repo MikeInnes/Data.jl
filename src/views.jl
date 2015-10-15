@@ -1,14 +1,14 @@
 import Base: getindex
 import ArrayViews: view
 
-type DataView{I, S}
-  data::DataSet{I}
-  index::S
+immutable DataView{T, I} <: Table
+  data::T
+  index::I
 end
 
-typealias DataRow{I, S<:Integer} DataView{I, S}
+typealias DataRow{T, I<:Integer} DataView{T, I}
 
-view(data, i) = DataView(data, i)
+view(data::Table, i) = DataView(data, i)
 
 getindex(d::DataView, f::Column) = d.data[f, d.index]
 getindex(d::DataView, f::Column, i) = d.data[f, d.index[i]]

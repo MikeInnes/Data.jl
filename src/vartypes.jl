@@ -1,4 +1,4 @@
-export vartype, vareltype, Categorical, Ordinal, Continuous, DataSet
+export vartype, vareltype, Categorical, Ordinal, Continuous
 
 type Categorical end
 type Ordinal end

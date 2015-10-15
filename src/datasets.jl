@@ -1,8 +1,12 @@
 import Base: getindex, setindex!, ==
 
+export Table, DataSet
+
+abstract Table
+
 typealias Column Union{Field, Symbol}
 
-type DataSet{I}
+type DataSet{I} <: Table
   cols::Vector{Symbol}
   data::TypedDict{I}
 end
