@@ -1,4 +1,4 @@
-import Base: getindex, setindex!, ==
+import Base: getindex, setindex!, ==, sub
 
 export Table, DataSet
 
@@ -34,3 +34,7 @@ getindex{I, T<:Integer}(d::DataSet{I}, rows::AbstractVector{T}) =
 Base.names(d::DataSet) = copy(d.cols)
 columns(d::DataSet) = map(c -> d[c], d.cols)
 Base.length(d::DataSet) = length(columns(d)[1])
+
+function sub{T<:Integer}(d::DataSet, rows::AbstractVector{T})
+  DataSet(names(d), TypedDict([k => sub(v, rows) for (k, v) in d.data]...))
+end
