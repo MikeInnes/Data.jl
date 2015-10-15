@@ -32,7 +32,7 @@ getindex(xs::PooledVector, i::Indexes) = PooledVector(xs.values, xs.data[i])
 names(xs::PooledVector) = xs.values
 
 function unique(xs::PooledVector)
-  seen = falses(length(xs.values))
+  seen = Array(Bool, length(names(xs)))
   for i in xs.data
     seen[i] = true
   end
