@@ -90,11 +90,4 @@ dissoc!(d::TypedDict, f::Field) = dissoc!(d, Symbol(f))
 
 dissoc(d::TypedDict, f) = dissoc!(copy(d), f)
 
-macro forward(ex, fs)
-  @capture(ex, T_.field_) || error("Syntax: @forward T.f f, g, h")
-  T = esc(T)
-  fs = isexpr(fs, :tuple) ? map(esc, fs.args) : [esc(fs)]
-  :($([:($f(x::$T, args...) = $f(x.$field, args...)) for f in fs]...);nothing)
-end
-
 @forward TypedDict.values Base.start, Base.next, Base.done
