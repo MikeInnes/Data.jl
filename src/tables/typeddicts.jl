@@ -1,6 +1,6 @@
 import Base: getindex
 
-export @f_str, TypedDict
+export @f_str, TypedDict, with
 
 # Fields
 
@@ -12,6 +12,8 @@ Base.convert(::Type{Field}, s::Symbol) = Field{s}()
 macro f_str(s)
   :(Field{$(Expr(:quote, symbol(s)))}())
 end
+
+typealias FieldPair{F<:Field, T} Pair{F, T}
 
 # Type info storage
 
@@ -72,12 +74,17 @@ end
 
 getindex(d::TypedDict, fs::NTuple) = map(f -> d[f], fs)
 
-@generated function assoc{I, K}(d::TypedDict{I}, f::Field{K}, v)
-  I′ = storeinfo(merge(typeinfo[I], Dict(K => v)))
-  :(TypedDict{$(Expr(:quote, I′))}(merge(d.values, Dict($(Expr(:quote, K))=>v))))
+@generated function with{I}(d::TypedDict{I}, p::FieldPair)
+  K = p.parameters[1].parameters[1]
+  I′ = storeinfo(merge(typeinfo[I], Dict(K => p.parameters[2])))
+  :(TypedDict{$(Expr(:quote, I′))}(merge(d.values, Dict($(Expr(:quote, K))=>p.second))))
 end
 
-assoc(d::TypedDict, f::Symbol, v) = assoc(d, Field(f), v)
+for nargs = 1:5
+  args = [symbol("p$i") for i = 1:nargs]
+  @eval with(x, $([:($p::FieldPair) for p = args]...), p::FieldPair) =
+      with(with(x, $(args...)), p)
+end
 
 @generated function Base.merge{I, J}(d::TypedDict{I}, e::TypedDict{J})
   I′ = storeinfo(merge(typeinfo[I], typeinfo[J]))
@@ -91,3 +98,10 @@ dissoc!(d::TypedDict, f::Field) = dissoc!(d, Symbol(f))
 dissoc(d::TypedDict, f) = dissoc!(copy(d), f)
 
 @forward TypedDict.values Base.start, Base.next, Base.done
+
+# Similar API for immutable types
+
+@generated function with{F, T}(x, p::Pair{Field{F}, T})
+  :($(x.name.primary)($([name == F ? :(p.second) : :(x.$name)
+                         for name in fieldnames(x)]...)))
+end
