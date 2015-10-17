@@ -12,4 +12,4 @@ function column(::Categorical, xs)
   end
 end
 
-DataSet(d::DataFrame) = DataSet([name => column(d[name]) for name in names(d)]...)
+DataSet(d::DataFrame) = DataSet([Pair(name, column(d[name])) for name in names(d)]...)
