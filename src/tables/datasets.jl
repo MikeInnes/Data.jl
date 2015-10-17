@@ -6,7 +6,7 @@ abstract Table
 
 typealias Column Union{Field, Symbol}
 
-type DataSet{I} <: Table
+immutable DataSet{I} <: Table
   cols::Vector{Symbol}
   data::TypedDict{I}
 end
