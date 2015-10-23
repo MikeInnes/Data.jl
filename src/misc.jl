@@ -18,8 +18,6 @@ macro forward(ex, fs)
   :($([:($f(x::$T, args...) = $f(x.$field, args...)) for f in fs]...);nothing)
 end
 
-export @static
-
 function staticm(ex)
   @match ex begin
     Array(T_, n_Integer) => begin
