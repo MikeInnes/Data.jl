@@ -43,3 +43,23 @@ end
 macro static(ex)
   staticm(ex)
 end
+
+macro unroll(n, ex)
+  isa(n, Integer) || error("@unroll needs an integer")
+  @match ex begin
+    for i_ in range_ body_ end => quote
+      state = start($(esc(range)))
+      @unroll $n while !done($(esc(range)), state)
+        $(esc(i)), state = next($(esc(range)), state)
+        $(esc(body))
+      end
+    end
+    while cond_ body_ end => quote
+      while $(esc(cond))
+        $(esc(body))
+        $([:(!$(esc(cond)) && break; $(esc(body))) for i = 1:(n-1)]...)
+      end
+    end
+    _ => error("@unroll needs a loop")
+  end
+end
