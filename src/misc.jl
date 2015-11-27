@@ -10,6 +10,7 @@ vartype(x) = vartype(typeof(x))
 vareltype(xs) = vartype(eltype(xs))
 
 typealias Indexes{T<:Integer} AbstractVector{T}
+typealias Indexes{T<:Integer} AbstractVector{T}
 
 function staticm(ex)
   @match ex begin
@@ -37,6 +38,7 @@ macro static(ex)
   staticm(ex)
 end
 
+# TODO: specialise on ranges
 macro unroll(n, ex)
   isa(n, Integer) || error("@unroll needs an integer")
   @match ex begin
