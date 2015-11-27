@@ -11,13 +11,6 @@ vareltype(xs) = vartype(eltype(xs))
 
 typealias Indexes{T<:Integer} AbstractVector{T}
 
-macro forward(ex, fs)
-  @capture(ex, T_.field_) || error("Syntax: @forward T.f f, g, h")
-  T = esc(T)
-  fs = isexpr(fs, :tuple) ? map(esc, fs.args) : [esc(fs)]
-  :($([:($f(x::$T, args...) = $f(x.$field, args...)) for f in fs]...);nothing)
-end
-
 function staticm(ex)
   @match ex begin
     Array(T_, n_Integer) => begin
